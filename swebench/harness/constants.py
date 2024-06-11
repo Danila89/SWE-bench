@@ -477,18 +477,18 @@ MAP_VERSION_TO_INSTALL_ASTROID = {
     for k in ['2.10', '2.12', '2.13', '2.14', '2.15', '2.5', '2.6', '2.7', '2.9', '3.0']
 }
 for k in ["2.5", "2.6"]:
-    MAP_VERSION_TO_INSTALL_ASTROID[k]["pip_packages"] = [
+    MAP_VERSION_TO_INSTALL_ASTROID[k]["pip_packages"] += [
         "lazy_object_proxy==1.9.0", "wrapt==1.12.1"]
 for k in ["2.9", "2.10"]:
-    MAP_VERSION_TO_INSTALL_ASTROID[k]["pip_packages"] = [
+    MAP_VERSION_TO_INSTALL_ASTROID[k]["pip_packages"] += [
         "lazy_object_proxy==1.9.0", "wrapt==1.13.3",
         "typing-extensions==4.8.0", "setuptools==68.0.0"]
 for k in ["2.12", "2.13", "2.14", "2.15"]:
-    MAP_VERSION_TO_INSTALL_ASTROID[k]["pip_packages"] = [
+    MAP_VERSION_TO_INSTALL_ASTROID[k]["pip_packages"] += [
         "lazy_object_proxy==1.9.0", "wrapt==1.15.0", "typing-extensions==4.8.0"]
-MAP_VERSION_TO_INSTALL_ASTROID["2.7"]["pip_packages"] = [
+MAP_VERSION_TO_INSTALL_ASTROID["2.7"]["pip_packages"] += [
     "lazy_object_proxy==1.9.0", "wrapt==1.12.1", "typing-extensions==4.8.0"]
-MAP_VERSION_TO_INSTALL_ASTROID["3.0"]["pip_packages"] = ["typing-extensions==4.8.0"]
+MAP_VERSION_TO_INSTALL_ASTROID["3.0"]["pip_packages"] += ["typing-extensions==4.8.0"]
 
 
 MAP_VERSION_TO_INSTALL_MARSHMALLOW = {
