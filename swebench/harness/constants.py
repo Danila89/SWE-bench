@@ -366,7 +366,7 @@ MAP_VERSION_TO_INSTALL_ASTROPY = {
         "install": "pip install -e .[test]",
         "pip_packages": [
             "attrs==23.1.0", "exceptiongroup==1.1.3", "execnet==2.0.2", "hypothesis==6.82.6",
-            "iniconfig==2.0.0", "numpy==1.25.2", "packaging==23.1", "pluggy==1.3.0",
+            "iniconfig==2.0.0", "numpy==1.23.5", "packaging==23.1", "pluggy==1.3.0",
             "psutil==5.9.5", "pyerfa==2.0.0.3", "pytest-arraydiff==0.5.0", "pytest-astropy-header==0.2.2",
             "pytest-astropy==0.10.0", "pytest-cov==4.1.0", "pytest-doctestplus==1.0.0", "pytest-filter-subpackage==0.1.2",
             "pytest-mock==3.11.1", "pytest-openfiles==0.5.0", "pytest-remotedata==0.4.0", "pytest-xdist==3.3.1",
@@ -380,7 +380,9 @@ MAP_VERSION_TO_INSTALL_ASTROPY = {
 
 for k in ["4.1", "4.2", "4.3", "5.0", "5.1", "5.2"]:
     MAP_VERSION_TO_INSTALL_ASTROPY[k]["pre_install"] = [
-        'sed -i \'s/requires = \\["setuptools",/requires = \\["setuptools==68.0.0",/\' pyproject.toml'
+        'sed -i \'s/requires = \\["setuptools",/requires = \\["setuptools==68.0.0",/\' pyproject.toml',
+        '# fetch latest Leap_Second data (outdated version of this file in old repo versions will cause test_fitswcs.py::test_time_cube failure',
+        'curl -o astropy/utils/iers/data/Leap_Second.dat https://hpiers.obspm.fr/iers/bul/bulc/Leap_Second.dat',
     ]
 
 MAP_VERSION_TO_INSTALL_SYMPY = {
