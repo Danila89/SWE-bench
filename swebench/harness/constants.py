@@ -277,6 +277,7 @@ MAP_VERSION_TO_INSTALL_MATPLOTLIB.update(
         k: {
             "python": "3.8",
             "packages": "requirements.txt",
+            "pre_install": ["apt install -y gcc"],
             "install": "python -m pip install -e .",
             "arch_specific_packages": {
                 "aarch64": "gxx_linux-aarch64 gcc_linux-aarch64 make",
@@ -453,7 +454,7 @@ MAP_VERSION_TO_INSTALL_SQLFLUFF = {
 MAP_VERSION_TO_INSTALL_PYVISTA = {
     k: {
         "python": "3.9",
-        "pre_install": ["apt install libgl1-mesa-glx libgl1-mesa-dev"],
+        "pre_install": ["apt install -y libgl1-mesa-glx libgl1-mesa-dev"],
         "install": "pip install -e .",
         "pip_packages": ["pytest"],
     }
@@ -463,6 +464,7 @@ MAP_VERSION_TO_INSTALL_PYVISTA.update({
     k: {
         "python": "3.9",
         "packages": "requirements.txt",
+        "pre_install": ["apt install -y libgl1-mesa-glx libgl1-mesa-dev"],
         "install": "pip install -e .",
         "pip_packages": ["pytest"],
     }
