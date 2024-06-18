@@ -453,6 +453,7 @@ MAP_VERSION_TO_INSTALL_SQLFLUFF = {
 MAP_VERSION_TO_INSTALL_PYVISTA = {
     k: {
         "python": "3.9",
+        "pre_install": ["apt install libgl1-mesa-glx libgl1-mesa-dev"],
         "install": "pip install -e .",
         "pip_packages": ["pytest"],
     }
