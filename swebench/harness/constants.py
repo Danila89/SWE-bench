@@ -4,6 +4,7 @@ MAP_VERSION_TO_INSTALL_SKLEARN = {
     k: {
         "python": "3.6",
         "packages": "numpy scipy cython pytest pandas matplotlib",
+        "pre_install": ["apt install g++ -y"],
         "install": "pip install -v --no-use-pep517 --no-build-isolation -e .",
         "arch_specific_packages": {
             "aarch64": "gxx_linux-aarch64 gcc_linux-aarch64 make",
@@ -20,6 +21,7 @@ MAP_VERSION_TO_INSTALL_SKLEARN.update(
         k: {
             "python": "3.9",
             "packages": "numpy scipy cython pytest pandas matplotlib joblib threadpoolctl",
+            "pre_install": ["apt install g++ -y"],
             "install": "pip install -v --no-use-pep517 --no-build-isolation -e .",
             "arch_specific_packages": {
                 "aarch64": "gxx_linux-aarch64 gcc_linux-aarch64 make",
@@ -249,7 +251,7 @@ MAP_VERSION_TO_INSTALL_MATPLOTLIB = {
     k: {
         "python": "3.11",
         "packages": "environment.yml",
-        "pre_install": ["apt install -y gcc"],
+        "pre_install": ["apt install -y gcc g++"],
         "install": "python -m pip install -e .",
         "pip_packages": [
             "contourpy==1.1.0",
@@ -277,7 +279,7 @@ MAP_VERSION_TO_INSTALL_MATPLOTLIB.update(
         k: {
             "python": "3.8",
             "packages": "requirements.txt",
-            "pre_install": ["apt install -y gcc"],
+            "pre_install": ["apt install -y gcc g++"],
             "install": "python -m pip install -e .",
             "arch_specific_packages": {
                 "aarch64": "gxx_linux-aarch64 gcc_linux-aarch64 make",
@@ -291,6 +293,7 @@ MAP_VERSION_TO_INSTALL_MATPLOTLIB.update(
         k: {
             "python": "3.7",
             "packages": "requirements.txt",
+            "pre_install": ["apt install -y gcc g++"],
             "install": "python -m pip install -e .",
             "arch_specific_packages": {
                 "aarch64": "gxx_linux-aarch64 gcc_linux-aarch64 make",
@@ -303,6 +306,7 @@ MAP_VERSION_TO_INSTALL_MATPLOTLIB.update(
     {
         k: {
             "python": "3.5",
+            "pre_install": ["apt install -y gcc g++"],
             "install": "python setup.py build; python setup.py install",
             "arch_specific_packages": {
                 "aarch64": "gxx_linux-aarch64 gcc_linux-aarch64 make",
