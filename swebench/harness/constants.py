@@ -251,7 +251,7 @@ MAP_VERSION_TO_INSTALL_MATPLOTLIB = {
     k: {
         "python": "3.11",
         "packages": "environment.yml",
-        "pre_install": ["apt install -y gcc g++ pkg-config"],
+        "pre_install": ["apt install -y gcc g++ pkg-config libfreetype6-dev"],
         "install": "python -m pip install -e .",
         "pip_packages": [
             "contourpy==1.1.0",
@@ -279,7 +279,7 @@ MAP_VERSION_TO_INSTALL_MATPLOTLIB.update(
         k: {
             "python": "3.8",
             "packages": "requirements.txt",
-            "pre_install": ["apt install -y gcc g++ pkg-config"],
+            "pre_install": ["apt install -y gcc g++ pkg-config libfreetype6-dev"],
             "install": "python -m pip install -e .",
             "arch_specific_packages": {
                 "aarch64": "gxx_linux-aarch64 gcc_linux-aarch64 make",
@@ -293,7 +293,7 @@ MAP_VERSION_TO_INSTALL_MATPLOTLIB.update(
         k: {
             "python": "3.7",
             "packages": "requirements.txt",
-            "pre_install": ["apt install -y gcc g++ pkg-config"],
+            "pre_install": ["apt install -y gcc g++ pkg-config libfreetype6-dev"],
             "install": "python -m pip install -e .",
             "arch_specific_packages": {
                 "aarch64": "gxx_linux-aarch64 gcc_linux-aarch64 make",
@@ -306,7 +306,7 @@ MAP_VERSION_TO_INSTALL_MATPLOTLIB.update(
     {
         k: {
             "python": "3.5",
-            "pre_install": ["apt install -y gcc g++ pkg-config"],
+            "pre_install": ["apt install -y gcc g++ pkg-config libfreetype6-dev"],
             "install": "python setup.py build; python setup.py install",
             "arch_specific_packages": {
                 "aarch64": "gxx_linux-aarch64 gcc_linux-aarch64 make",
