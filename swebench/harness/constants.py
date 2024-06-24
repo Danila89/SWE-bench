@@ -306,7 +306,7 @@ MAP_VERSION_TO_INSTALL_MATPLOTLIB.update(
     {
         k: {
             "python": "3.5",
-            "pre_install": ["apt install -y make gcc g++ pkg-config libfreetype6-dev ghostscript"],
+            "pre_install": ["apt install -y make gcc g++ pkg-config libfreetype6-dev ghostscript texlive-xetex dvipng texlive-full"],
             "install": "python setup.py build; python setup.py install",
             "arch_specific_packages": {
                 "aarch64": "gxx_linux-aarch64 gcc_linux-aarch64 make",
