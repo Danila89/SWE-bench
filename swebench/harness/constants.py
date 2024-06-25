@@ -388,8 +388,6 @@ MAP_VERSION_TO_INSTALL_ASTROPY = {
 for k in ["4.1", "4.2", "4.3", "5.0", "5.1", "5.2"]:
     MAP_VERSION_TO_INSTALL_ASTROPY[k]["pre_install"] = [
         'sed -i \'s/requires = \\["setuptools",/requires = \\["setuptools==68.0.0",/\' pyproject.toml',
-        '# fetch latest Leap_Second data (outdated version of this file in old repo versions will cause test_fitswcs.py::test_time_cube failure',
-        'curl -o astropy/utils/iers/data/Leap_Second.dat https://hpiers.obspm.fr/iers/bul/bulc/Leap_Second.dat',
     ]
 
 MAP_VERSION_TO_INSTALL_SYMPY = {
