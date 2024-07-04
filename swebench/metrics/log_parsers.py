@@ -186,6 +186,7 @@ parse_log_astropy = parse_log_pytest_v2
 parse_log_scikit = parse_log_pytest_v2
 parse_log_sphinx = parse_log_pytest_v2
 
+parse_log_pydantic = parse_log_pytest
 
 MAP_REPO_TO_PARSER = {
     "astropy/astropy": parse_log_astropy,
@@ -206,4 +207,5 @@ MAP_REPO_TO_PARSER = {
     "sqlfluff/sqlfluff": parse_log_sqlfluff,
     "sphinx-doc/sphinx": parse_log_sphinx,
     "sympy/sympy": parse_log_sympy,
+    "pydantic/pydantic": parse_log_pydantic
 }

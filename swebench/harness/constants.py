@@ -567,6 +567,36 @@ MAP_VERSION_TO_INSTALL = {
     "sympy/sympy": MAP_VERSION_TO_INSTALL_SYMPY,
 }
 
+MAP_VERSION_TO_INSTALL["pydantic/pydantic"] = {
+    k: {
+        "install": "pip install -r requirements.txt",
+        "packages": "requirements.txt",
+        "python": "3.9",
+        "pip_packages": [
+            "pytest==6.2.2",
+            "pytest-cov==2.11.1",
+            "pytest-mock==3.5.1",
+            "pytest-sugar==0.9.4",]
+    }
+    for k in ["1.7", "1.8"]
+}
+
+MAP_VERSION_TO_INSTALL["pydantic/pydantic"].update(
+    {
+        k: {
+            "install": "pip install -r requirements.txt",
+            "packages": "requirements.txt",
+            "python": "3.11",
+            "pip_packages": [
+            "pytest==6.2.2",
+            "pytest-cov==2.11.1",
+            "pytest-mock==3.5.1",
+            "pytest-sugar==0.9.4",]
+        }
+        for k in ["1.9", "1.10"]
+    }
+)
+
 # Constants - Repository Specific Installation Instructions
 MAP_REPO_TO_INSTALL = {}
 
@@ -596,6 +626,7 @@ MAP_REPO_TO_TEST_FRAMEWORK = {
     "swe-bench/humanevalfix-go": "go test",
     "swe-bench/humanevalfix-java": "javac Main.java Test.java; java Test",
     "sympy/sympy": "bin/test -C --verbose",
+    "pydantic/pydantic": TEST_PYTEST
 }
 
 # Constants - Task Instance Requirements File Paths
@@ -607,6 +638,11 @@ MAP_REPO_TO_REQS_PATHS = {
     "pyvista/pyvista": ["requirements_test.txt", 'requirements.txt'],
     "sqlfluff/sqlfluff": ["requirements_dev.txt"],
     "sympy/sympy": ["requirements-dev.txt"],
+    "pydantic/pydantic": [
+            "requirements.txt",
+            "benchmarks/requirements.txt",
+            "tests/requirements-testing.txt",
+            "tests/requirements-linting.txt"]
 }
 
 # Constants - Task Instance environment.yml File Paths
