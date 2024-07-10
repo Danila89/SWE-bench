@@ -4,6 +4,7 @@ import re
 import requests
 import subprocess
 
+from collections import OrderedDict
 from datetime import datetime
 from dotenv import load_dotenv
 from git import Repo
@@ -146,9 +147,8 @@ def get_requirements(instance: dict, save_path: str = None):
         requirements.txt (str): If save_path given, returns path to saved requirements.txt.
             Otherwise, returns requirements.txt as string
     """
-    # Attempt to find requirements.txt at each path based on task instance's repo
-    path_worked = False
     commit = 'environment_setup_commit' if 'environment_setup_commit' in instance else 'base_commit'
+    all_requirements = OrderedDict()
 
     for req_path in MAP_REPO_TO_REQS_PATHS[instance["repo"]]:
         reqs_url = os.path.join(
@@ -156,45 +156,16 @@ def get_requirements(instance: dict, save_path: str = None):
         )
         reqs = requests.get(reqs_url)
         if reqs.status_code == 200:
-            path_worked = True
-            break
-    if not path_worked:
+            process_requirements(reqs.text, req_path, all_requirements, instance, commit)
+
+    if not all_requirements:
         print(
-            f"Could not find requirements.txt at paths {MAP_REPO_TO_REQS_PATHS[instance['repo']]}"
+            f"Could not find any valid requirements.txt at paths {MAP_REPO_TO_REQS_PATHS[instance['repo']]}"
         )
         return None
 
-    lines = reqs.text
-    original_req = []
-    additional_reqs = []
-    req_dir = "/".join(req_path.split("/")[:-1])
-    exclude_line = lambda line: any(
-        [line.strip().startswith(x) for x in ["-e .", "#", ".[test"]]
-    )
-
-    for line in lines.split("\n"):
-        if line.strip().startswith("-r"):
-            # Handle recursive requirements
-            file_name = line[len("-r") :].strip()
-            reqs_url = os.path.join(
-                SWE_BENCH_URL_RAW,
-                instance["repo"],
-                instance[commit],
-                req_dir,
-                file_name,
-            )
-            reqs = requests.get(reqs_url)
-            if reqs.status_code == 200:
-                for line_extra in reqs.text.split("\n"):
-                    if not exclude_line(line_extra):
-                        additional_reqs.append(line_extra)
-        else:
-            if not exclude_line(line):
-                original_req.append(line)
-
     # Combine all requirements into single text body
-    additional_reqs.append("\n".join(original_req))
-    all_reqs = "\n".join(additional_reqs)
+    all_reqs = "\n".join(all_requirements.values())
 
     if save_path is None:
         return all_reqs
@@ -204,6 +175,31 @@ def get_requirements(instance: dict, save_path: str = None):
         f.write(all_reqs)
     return path_to_reqs
 
+def process_requirements(content: str, req_path: str, all_requirements: OrderedDict, instance: dict, commit: str):
+    req_dir = "/".join(req_path.split("/")[:-1])
+    exclude_line = lambda line: any(
+        [line.strip().startswith(x) for x in ["-e .", "#", ".[test"]]
+    )
+
+    for line in content.split("\n"):
+        if line.strip().startswith("-r"):
+            # Handle recursive requirements
+            file_name = line[len("-r"):].strip()
+            reqs_url = os.path.join(
+                SWE_BENCH_URL_RAW,
+                instance["repo"],
+                instance[commit],
+                req_dir,
+                file_name,
+            )
+            reqs = requests.get(reqs_url)
+            if reqs.status_code == 200:
+                process_requirements(reqs.text, os.path.join(req_dir, file_name), all_requirements, instance, commit)
+        else:
+            if not exclude_line(line):
+                package_name = line.split('==')[0].split('>=')[0].split('<=')[0].strip()
+                if package_name not in all_requirements:
+                    all_requirements[package_name] = line
 
 def get_test_directives(instance: dict) -> list:
     """
@@ -264,8 +260,8 @@ def clone_repo(repo_name: str, path: str, token: str = None) -> bool:
         if token is None:
             token = os.environ.get("GITHUB_TOKEN", "git")
         repo_url = (
-            f"https://{token}@github.com/swe-bench/"
-            + repo_name.replace("/", "__")
+            f"https://{token}@github.com/"
+            + repo_name
             + ".git"
         )
         Repo.clone_from(repo_url, path)

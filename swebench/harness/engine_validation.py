@@ -122,6 +122,8 @@ def main(args):
         args.num_workers = cpu_count()
 
     task_instances = get_instances(args.instances_path)
+    if args.instance_id is not None:
+        task_instances = [t for t in task_instances if t["instance_id"] == args.instance_id]
     task_instances_groups = split_instances(task_instances, args.num_workers)
 
     data_groups = [
@@ -158,6 +160,7 @@ if __name__ == "__main__":
     parser.add_argument("--timeout", type=int, default=None, help="(Optional) Timeout (seconds) for testing script execution")
     parser.add_argument("--verbose", action="store_true", help="(Optional) Verbose mode")
     parser.add_argument("--num_workers", type=int, default=None, help="(Optional) Number of workers")
+    parser.add_argument("--instance_id", type=str, default=None, help="(Optional) Instance ID to run")
     args = parser.parse_args()
     validate_args(args)
     main(args)

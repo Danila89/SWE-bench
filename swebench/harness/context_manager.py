@@ -296,7 +296,7 @@ class TestbedContextManager:
         self.path_conda = os.path.abspath(self.path_conda)
         path_activate = os.path.join(self.path_conda, "bin", "activate")
         exec_cmd = os.path.join(self.path_conda, "bin", "conda")
-        env_list = get_conda_env_names(exec_cmd)
+        env_list = [e.split("/")[-1] for e in get_conda_env_names(exec_cmd)]
 
         # Set up testbed (environment, github repo) for each repo
         for repo, version_to_setup_ref in self.setup_refs.items():
@@ -350,7 +350,7 @@ class TestbedContextManager:
                     path_to_reqs = get_requirements(setup_ref_instance, self.testbed)
                     cmd = f". {path_activate} {env_name} && echo 'activate successful' && pip install -r {path_to_reqs}"
                     self.log.write(f"Installing dependencies for {env_name}; Command: {cmd}")
-                    self.exec(cmd, shell=True)
+                    self.exec(cmd, shell=True, executable='/bin/bash')
                     os.remove(path_to_reqs)
                 elif pkgs == "environment.yml":
                     if "no_use_env" in install and install["no_use_env"]:
@@ -623,7 +623,7 @@ class TaskEnvContextManager:
         self.log.write(f"Running installation command: {cmd_install}")
         try:
             # Run installation command
-            out_install = self.exec(cmd_install, timeout=self.timeout, shell=True)
+            out_install = self.exec(cmd_install, timeout=self.timeout, shell=True, executable='/bin/bash')
 
             if out_install.returncode != 0:
                 # Installation failed
@@ -728,7 +728,7 @@ class TaskEnvContextManager:
                 self.exec.subprocess_args["env"].update(specifications["env_vars_test"])
 
             out_test = self.exec(
-                test_cmd, shell=True, timeout=self.timeout, check=False
+                test_cmd, shell=True, timeout=self.timeout, check=False, executable='/bin/bash'
             )
 
             # Unset environment variables if provided
