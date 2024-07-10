@@ -19,7 +19,9 @@ MAP_REPO_TO_VERSION_PATHS = {
     "scikit-learn/scikit-learn": ["sklearn/__init__.py"],
     "sphinx-doc/sphinx": ["sphinx/__init__.py"],
     "sympy/sympy": ["sympy/release.py", "sympy/__init__.py"],
-    "pydantic/pydantic": ["pydantic/version.py", ]
+    "pydantic/pydantic": ["pydantic/version.py", ],
+    "encode/django-rest-framework": ["rest_framework/__init__.py", "djangorestframework/__init__.py"],
+    "iterative" : ["dvc/version.py"]
 }
 
 # Cosntants - Task Instance Version Regex Pattern
@@ -39,6 +41,8 @@ MAP_REPO_TO_VERSION_PATTERNS = {
         "scikit-learn/scikit-learn",
         "sphinx-doc/sphinx",
         "sympy/sympy",
+        "encode/django-rest-framework",
+        "iterative/dvc"
     ]
 }
 MAP_REPO_TO_VERSION_PATTERNS.update(

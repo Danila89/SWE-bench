@@ -186,6 +186,39 @@ def get_versions_from_build(data: dict):
         json.dump(data_tasks, fp=f)
     os.chdir(cwd)
 
+def get_git_tag(instance, path_repo=None):
+    """
+    Restore the repo to a given commit and get the most recent Git tag.
+
+    Args:
+        instance (dict): Instance data containing 'base_commit' and 'instance_id'.
+        is_build (bool): Flag to indicate if this is being called during build (not used, but kept for consistency).
+        path_repo (str): Path to the repository (used if provided).
+
+    Returns:
+        str: The most recent Git tag.
+    """
+    try:
+        if path_repo:
+            # Change to the repo directory if path is provided
+            current_dir = os.getcwd()
+            os.chdir(path_repo)
+        tag = subprocess.check_output(["git", "describe", "--contains", instance['base_commit']], 
+                                      stderr=subprocess.DEVNULL).decode().strip()
+        tag = re.match(r'\d+\.\d+', tag).group(0)
+
+        return tag
+
+    except subprocess.CalledProcessError as e:
+        logger.error(f"git describe error: {e}")
+        # If any git command fails, return a default value
+        return 
+
+    finally:
+        if path_repo:
+            # Change back to the original directory
+            os.chdir(current_dir)
+
 
 def get_versions_from_web(data: dict):
     """
@@ -246,6 +279,8 @@ def main(args):
     """
     # Get task instances + split into groups for each thread
     data_tasks = get_instances(args.instances_path)
+    if args.instance_id is not None:
+        data_tasks = [x for x in data_tasks if x["instance_id"] == args.instance_id]
     data_task_lists = split_instances(data_tasks, args.num_workers)
     repo_prefix = data_tasks[0]["repo"].replace("/", "__")
 
@@ -296,7 +331,7 @@ def main(args):
             )
 
     # Check that all required arguments for installing task instances are present
-    assert any([x == args.retrieval_method for x in ["build", "mix"]])
+    assert any([x == args.retrieval_method for x in ["build", "mix", "tag"]])
     assert all([x in args for x in ["testbed", "path_conda", "conda_env"]])
     conda_exec = os.path.join(args.path_conda, "bin/conda")
 
@@ -310,7 +345,7 @@ def main(args):
                 f"Creating clone of {data_tasks[0]['repo']} at {testbed_repo_name}"
             )
             cmd_clone = (
-                f"git clone git@github.com:swe-bench/{repo_prefix} {testbed_repo_name}"
+                f"git clone git@github.com:{repo_prefix.replace('__', '/')} {testbed_repo_name}"
             )
             subprocess.run(cmd_clone, shell=True, check=True, stdout=subprocess.DEVNULL)
         else:
@@ -344,6 +379,19 @@ def main(args):
                 "save_path": os.path.join(cwd, f"{repo_prefix}_versions_{i}.json"),
             }
         )
+
+    if args.retrieval_method == "tag":
+        for data in pool_tasks:
+            for instance in data["data_tasks"]:
+                instance["version"] = get_git_tag(instance, data["path_repo"])
+        
+            with open(data["save_path"], "w") as f:
+                json.dump(data_tasks, fp=f)
+
+        assert len(data_tasks) == merge_results(
+            args.instances_path, repo_prefix, args.output_dir
+        )
+        return
 
     # Parallelized call
     pool = Pool(processes=args.num_workers)
@@ -382,12 +430,13 @@ def main(args):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--instances_path", required=True, type=str, default=None, help="Path to task instances")
-    parser.add_argument("--retrieval_method", required=True, choices=["build", "mix", "github"], default="github", help="Method to retrieve versions")
+    parser.add_argument("--retrieval_method", required=True, choices=["build", "mix", "github", "tag"], default="github", help="Method to retrieve versions")
     parser.add_argument("--cleanup", action="store_true", help="Remove testbed repo and conda environments")
     parser.add_argument("--conda_env", type=str, default=None, help="Conda environment to use")
     parser.add_argument("--path_conda", type=str, default=None, help="Path to conda")
     parser.add_argument("--num_workers", type=int, default=1, help="Number of threads to use")
     parser.add_argument("--output_dir", type=str, default=None, help="Path to save results")
     parser.add_argument("--testbed", type=str, default=None, help="Path to testbed repo")
+    parser.add_argument("--instance_id", type=str, default=None, help="Instance ID to run")
     args = parser.parse_args()
     main(args)

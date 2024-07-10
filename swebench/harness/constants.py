@@ -540,6 +540,28 @@ MAP_VERSION_TO_INSTALL_PYDICOM.update({
 
 MAP_VERSION_TO_INSTALL_HUMANEVAL= {k: { "python": "3.9" } for k in ['1.0']}
 
+
+MAP_VERSION_TO_INSTALL_PYDANTIC = {
+    k: {
+        "pre_install": ["apt install -y make gcc"],
+        "packages": "requirements.txt",
+        "python": "3.7",
+    }
+    for k in ['0.1', '0.10', '0.11', '0.12', '0.13', '0.14', '0.15', '0.17', '0.18', '0.2', 
+              '0.20', '0.23', '0.24', '0.25', '0.27', '0.29', '0.3', '0.32', '0.4', '0.5', 
+              '0.6', '0.8', '0.9', '1.0', '1.1', '1.2', '1.3', '1.4', '1.5', '1.6', '1.7', 
+              '1.8', '1.9', '1.10', '2.0', '2.1', '2.2', '2.3', '2.4', '2.5', '2.6', '2.7', '2.8'] 
+}
+
+MAP_VERSION_TO_INSTALL_PYDANTIC.update({
+    k: {**MAP_VERSION_TO_INSTALL_PYDANTIC[k], "python": "3.9"}
+    for k in ['1.0', '1.1', '1.2', '1.3', '1.4', '1.5', '1.6', '1.7', '1.8']})
+
+MAP_VERSION_TO_INSTALL_PYDANTIC.update({
+    k: {**MAP_VERSION_TO_INSTALL_PYDANTIC[k], "python": "3.11", "install": "pdm install -G testing", "packages": "pdm"}
+    for k in ['2.0', '2.1', '2.2', '2.3', '2.4', '2.5', '2.6', '2.7', '2.8']})
+
+
 # Constants - Task Instance Instllation Environment
 MAP_VERSION_TO_INSTALL = {
     "astropy/astropy": MAP_VERSION_TO_INSTALL_ASTROPY,
@@ -565,37 +587,9 @@ MAP_VERSION_TO_INSTALL = {
     "swe-bench/humanevalfix-go": MAP_VERSION_TO_INSTALL_HUMANEVAL,
     "swe-bench/humanevalfix-java": MAP_VERSION_TO_INSTALL_HUMANEVAL,
     "sympy/sympy": MAP_VERSION_TO_INSTALL_SYMPY,
+    "pydantic/pydantic": MAP_VERSION_TO_INSTALL_PYDANTIC,
+    "iterative/dvc": MAP_VERSION_TO_INSTALL_DVC
 }
-
-MAP_VERSION_TO_INSTALL["pydantic/pydantic"] = {
-    k: {
-        "install": "pip install -r requirements.txt",
-        "packages": "requirements.txt",
-        "python": "3.7",
-    }
-    for k in ['0.1', '0.10', '0.11', '0.12', '0.13', '0.14', '0.15', '0.17', '0.18', '0.2', '0.20', '0.23', '0.24', '0.25', '0.27', '0.29', '0.3', '0.32', '0.4', '0.5', '0.6', '0.8', '0.9'] 
-}
-
-MAP_VERSION_TO_INSTALL["pydantic/pydantic"] = {
-    k: {
-        "install": "pip install -r requirements.txt",
-        "packages": "requirements.txt",
-        "python": "3.8",
-    }
-    for k in ['1.0', '1.1', '1.2', '1.3', '1.4', '1.5', '1.6', '1.7', '1.8'] 
-}
- 
-
-MAP_VERSION_TO_INSTALL["pydantic/pydantic"].update(
-    {
-        k: {
-            "install": "pip install -r requirements.txt",
-            "packages": "requirements.txt",
-            "python": "3.11",
-        }
-        for k in ['1.9', '1.10', '2.0', '2.1', '2.2', '2.3', '2.4', '2.5', '2.6', '2.7', '2.8']
-    }
-)
 
 # Constants - Repository Specific Installation Instructions
 MAP_REPO_TO_INSTALL = {}
@@ -626,7 +620,7 @@ MAP_REPO_TO_TEST_FRAMEWORK = {
     "swe-bench/humanevalfix-go": "go test",
     "swe-bench/humanevalfix-java": "javac Main.java Test.java; java Test",
     "sympy/sympy": "bin/test -C --verbose",
-    "pydantic/pydantic": TEST_PYTEST
+    "pydantic/pydantic": "pytest -rA --tb=no -p no:cacheprovider",
 }
 
 # Constants - Task Instance Requirements File Paths

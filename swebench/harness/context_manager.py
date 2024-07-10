@@ -350,7 +350,7 @@ class TestbedContextManager:
                     path_to_reqs = get_requirements(setup_ref_instance, self.testbed)
                     cmd = f". {path_activate} {env_name} && echo 'activate successful' && pip install -r {path_to_reqs}"
                     self.log.write(f"Installing dependencies for {env_name}; Command: {cmd}")
-                    self.exec(cmd, shell=True, executable='/bin/bash')
+                    self.exec(cmd, shell=True, executable='/bin/bash', raise_error=False)
                     os.remove(path_to_reqs)
                 elif pkgs == "environment.yml":
                     if "no_use_env" in install and install["no_use_env"]:
@@ -388,7 +388,7 @@ class TestbedContextManager:
                     # Create environment + install dependencies
                     cmd = f"{exec_cmd} create -n {env_name} python={install['python']} {pkgs} -y"
                     self.log.write(f"Creating environment {env_name}")
-                    self.exec(cmd.split(" "))
+                    self.exec(cmd.split(" "), raise_error=False)
                 
                 arch = platform.machine()
                 arch_specific_packages = install.get("arch_specific_packages", {}).get(arch, "")
