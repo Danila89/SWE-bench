@@ -19,6 +19,9 @@ MAP_REPO_TO_VERSION_PATHS = {
     "scikit-learn/scikit-learn": ["sklearn/__init__.py"],
     "sphinx-doc/sphinx": ["sphinx/__init__.py"],
     "sympy/sympy": ["sympy/release.py", "sympy/__init__.py"],
+    "pydantic/pydantic": ["pydantic/version.py", ],
+    "encode/django-rest-framework": ["rest_framework/__init__.py", "djangorestframework/__init__.py"],
+    "iterative" : ["dvc/version.py"]
 }
 
 # Cosntants - Task Instance Version Regex Pattern
@@ -38,6 +41,8 @@ MAP_REPO_TO_VERSION_PATTERNS = {
         "scikit-learn/scikit-learn",
         "sphinx-doc/sphinx",
         "sympy/sympy",
+        "encode/django-rest-framework",
+        "iterative/dvc"
     ]
 }
 MAP_REPO_TO_VERSION_PATTERNS.update(
@@ -52,5 +57,6 @@ MAP_REPO_TO_VERSION_PATTERNS.update(
 )
 MAP_REPO_TO_VERSION_PATTERNS.update({k: [r"(.*)"] for k in ["Qiskit/qiskit"]})
 MAP_REPO_TO_VERSION_PATTERNS.update({k: [r"version_info = [\d]+,[\d\s]+,"] for k in ["pyvista/pyvista"]})
+MAP_REPO_TO_VERSION_PATTERNS.update({k: [r'__version__ = [\'"](.*)[\'"]', r"VERSION = \((.*)\)", r"StrictVersion\('(\d+\.\d+)", r"VERSION = '(\d+\.\d+)"] for k in ["pydantic/pydantic"]})
 
 SWE_BENCH_URL_RAW = "https://raw.githubusercontent.com/"

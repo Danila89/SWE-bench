@@ -540,6 +540,67 @@ MAP_VERSION_TO_INSTALL_PYDICOM.update({
 
 MAP_VERSION_TO_INSTALL_HUMANEVAL= {k: { "python": "3.9" } for k in ['1.0']}
 
+
+MAP_VERSION_TO_INSTALL_PYDANTIC = {
+    k: {
+        "pre_install": ["apt install -y make gcc"],
+        "packages": "requirements.txt",
+        "python": "3.7",
+    }
+    for k in ['0.1', '0.10', '0.11', '0.12', '0.13', '0.14', '0.15', '0.17', '0.18', '0.2', 
+              '0.20', '0.23', '0.24', '0.25', '0.27', '0.29', '0.3', '0.32', '0.4', '0.5', 
+              '0.6', '0.8', '0.9', '1.0', '1.1', '1.2', '1.3', '1.4', '1.5', '1.6', '1.7', 
+              '1.8', '1.9', '1.10', '2.0', '2.1', '2.2', '2.3', '2.4', '2.5', '2.6', '2.7', '2.8'] 
+}
+
+MAP_VERSION_TO_INSTALL_PYDANTIC.update({
+    k: {**MAP_VERSION_TO_INSTALL_PYDANTIC[k], "python": "3.9"}
+    for k in ['1.0', '1.1', '1.2', '1.3', '1.4', '1.5', '1.6', '1.7', '1.8']})
+
+MAP_VERSION_TO_INSTALL_PYDANTIC.update({
+    k: {**MAP_VERSION_TO_INSTALL_PYDANTIC[k], "python": "3.11", "install": "pdm install -G testing", "packages": "pdm"}
+    for k in ['2.0', '2.1', '2.2', '2.3', '2.4', '2.5', '2.6', '2.7', '2.8']})
+
+
+MAP_VERSION_TO_INSTALL_DVC = {
+    k: {
+        "packages": "pdm",
+        "python": "3.7",
+    }
+    for k in ['0.10', '0.13', '0.14', '0.16', '0.17', '0.18', '0.19', '0.20', '0.21', '0.22', 
+              '0.23', '0.24', '0.25', '0.27', '0.28', '0.29', '0.30', '0.31', '0.32', '0.33',
+              '0.34', '0.35', '0.40', '0.41', '0.50', '0.51', '0.52', '0.53', '0.54', '0.55',
+              '0.57', '0.58', '0.59', '0.60', '0.61', '0.62', '0.63', '0.66', '0.69', '0.71',
+              '0.72', '0.74', '0.75', '0.77', '0.78', '0.8', '0.80', '0.81', '0.82', '0.84',
+              '0.85', '0.86', '0.87', '0.88', '0.89', '0.9', '0.90', '0.91', '0.92', '0.93',
+              '1.0', '1.1', '1.10', '1.11', '1.2', '1.3', '1.4', '1.5', '1.6', '1.7', '1.8', 
+              '1.9', '2.0', '2.1', '2.10', '2.11', '2.12', '2.13', '2.14', '2.16', '2.17', 
+              '2.18', '2.19', '2.2', '2.20', '2.21', '2.23', '2.24', '2.25', '2.28', '2.29', 
+              '2.3', '2.30', '2.34', '2.36', '2.39', '2.4', '2.42', '2.43', '2.44', '2.45', 
+              '2.46', '2.47', '2.48', '2.49', '2.5', '2.51', '2.52', '2.53', '2.55', '2.56', 
+              '2.57', '2.58', '2.6', '2.7', '2.8', '2.9', '3.0', '3.1', '3.11', '3.12', 
+              '3.13', '3.15', '3.18', '3.2', '3.20', '3.24', '3.25', '3.28', '3.30', 
+              '3.37', '3.38', '3.4', '3.43', '3.48', '3.49', '3.50', '3.51', '3.6'] 
+}
+
+MAP_VERSION_TO_INSTALL_DVC.update({
+    k: {**MAP_VERSION_TO_INSTALL_DVC[k], "python": "3.8"}
+    for k in ['1.0', '1.1', '1.10', '1.11', '1.2', '1.3', '1.4', '1.5', '1.6', '1.7', '1.8', '1.9', ]
+})
+
+MAP_VERSION_TO_INSTALL_DVC.update({
+    k: {**MAP_VERSION_TO_INSTALL_DVC[k], "python": "3.9"}
+    for k in ['2.0', '2.1', '2.10', '2.11', '2.12', '2.13', '2.14', '2.16', '2.17', 
+              '2.18', '2.19', '2.2', '2.20', '2.21', '2.23', '2.24', '2.25', '2.28', 
+              '2.29', '2.3', '2.30', '2.34', '2.36', '2.39', '2.4', '2.42', '2.43', 
+              '2.44', '2.45', '2.46', '2.47', '2.48', '2.49', '2.5', '2.51', '2.52', 
+              '2.53', '2.55', '2.56', '2.57', '2.58', '2.6', '2.7', '2.8', '2.9', 
+              '3.0', '3.1', '3.11', '3.12', '3.13', '3.15', '3.18', '3.2', '3.20', 
+              '3.24', '3.25', '3.28', '3.30', '3.37', '3.38', '3.4', '3.43', '3.48', 
+              '3.49', '3.50', '3.51', '3.6']
+})
+
+
 # Constants - Task Instance Instllation Environment
 MAP_VERSION_TO_INSTALL = {
     "astropy/astropy": MAP_VERSION_TO_INSTALL_ASTROPY,
@@ -565,37 +626,9 @@ MAP_VERSION_TO_INSTALL = {
     "swe-bench/humanevalfix-go": MAP_VERSION_TO_INSTALL_HUMANEVAL,
     "swe-bench/humanevalfix-java": MAP_VERSION_TO_INSTALL_HUMANEVAL,
     "sympy/sympy": MAP_VERSION_TO_INSTALL_SYMPY,
+    "pydantic/pydantic": MAP_VERSION_TO_INSTALL_PYDANTIC,
+    "iterative/dvc": MAP_VERSION_TO_INSTALL_DVC
 }
-
-MAP_VERSION_TO_INSTALL["pydantic/pydantic"] = {
-    k: {
-        "install": "pip install -r requirements.txt",
-        "packages": "requirements.txt",
-        "python": "3.9",
-        "pip_packages": [
-            "pytest==6.2.2",
-            "pytest-cov==2.11.1",
-            "pytest-mock==3.5.1",
-            "pytest-sugar==0.9.4",]
-    }
-    for k in ["1.7", "1.8"]
-}
-
-MAP_VERSION_TO_INSTALL["pydantic/pydantic"].update(
-    {
-        k: {
-            "install": "pip install -r requirements.txt",
-            "packages": "requirements.txt",
-            "python": "3.11",
-            "pip_packages": [
-            "pytest==6.2.2",
-            "pytest-cov==2.11.1",
-            "pytest-mock==3.5.1",
-            "pytest-sugar==0.9.4",]
-        }
-        for k in ["1.9", "1.10"]
-    }
-)
 
 # Constants - Repository Specific Installation Instructions
 MAP_REPO_TO_INSTALL = {}
@@ -626,7 +659,8 @@ MAP_REPO_TO_TEST_FRAMEWORK = {
     "swe-bench/humanevalfix-go": "go test",
     "swe-bench/humanevalfix-java": "javac Main.java Test.java; java Test",
     "sympy/sympy": "bin/test -C --verbose",
-    "pydantic/pydantic": TEST_PYTEST
+    "pydantic/pydantic": "pytest -rA --tb=no -p no:cacheprovider -W ignore::DeprecationWarning",
+    "iterative/dvc": TEST_PYTEST
 }
 
 # Constants - Task Instance Requirements File Paths
@@ -641,8 +675,7 @@ MAP_REPO_TO_REQS_PATHS = {
     "pydantic/pydantic": [
             "requirements.txt",
             "benchmarks/requirements.txt",
-            "tests/requirements-testing.txt",
-            "tests/requirements-linting.txt"]
+            "tests/requirements-testing.txt"]
 }
 
 # Constants - Task Instance environment.yml File Paths
