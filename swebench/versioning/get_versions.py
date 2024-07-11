@@ -200,7 +200,6 @@ def get_git_tag(instance, path_repo=None):
     """
     try:
         if path_repo:
-            # Change to the repo directory if path is provided
             current_dir = os.getcwd()
             os.chdir(path_repo)
         tag = subprocess.check_output(["git", "describe", "--contains", instance['base_commit']], 
@@ -211,12 +210,10 @@ def get_git_tag(instance, path_repo=None):
 
     except subprocess.CalledProcessError as e:
         logger.error(f"git describe error: {e}")
-        # If any git command fails, return a default value
         return 
 
     finally:
         if path_repo:
-            # Change back to the original directory
             os.chdir(current_dir)
 
 
