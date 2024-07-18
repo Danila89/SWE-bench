@@ -564,7 +564,7 @@ MAP_VERSION_TO_INSTALL_PYDANTIC.update({
 
 MAP_VERSION_TO_INSTALL_DVC = {
     k: {
-        "python": "3.7",
+        "python": "3.7", "pre_install": ["apt install -y make gcc"],
     }
     for k in ['0.10', '0.13', '0.14', '0.16', '0.17', '0.18', '0.19', '0.20', '0.21', '0.22', 
               '0.23', '0.24', '0.25', '0.27', '0.28', '0.29', '0.30', '0.31', '0.32', '0.33',

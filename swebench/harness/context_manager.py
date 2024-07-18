@@ -86,23 +86,21 @@ class ExecWrapper:
             self.logger.write(f"Return Code: {output.returncode}", level=DEBUG)
             return output
         except subprocess.CalledProcessError as e:
-            if self.logger is not None:
+            if raise_error and self.logger is not None:
                 self.logger.write(f"Error: {e}", level=ERROR)
                 self.logger.write(f"Error stdout: {e.stdout}", level=ERROR)
                 if e.stderr:
                     self.logger.write(f"Error stderr: {e.stderr}", level=ERROR)
                 self.logger.write(f"Error traceback: {format_exc()}", level=ERROR)
-            if raise_error:
                 raise e
         except subprocess.TimeoutExpired as e:
-            if self.logger is not None:
+            if raise_error and self.logger is not None:
                 self.logger.write(f"Error: {e}", level=ERROR)
                 self.logger.write(f"Error stdout: {e.stdout}", level=ERROR)
                 if e.stderr:
                     self.logger.write(f"Error stderr: {e.stderr}", level=ERROR)
                 self.logger.write(f"Error traceback: {format_exc()}", level=ERROR)
-            if raise_error:
-                raise e    
+                raise e 
 
 
 class TestbedContextManager:
@@ -380,7 +378,7 @@ class TestbedContextManager:
                         # Install dependencies
                         cmd = f"{exec_cmd} env update -f {path_to_reqs}"
                         self.log.write(f"Installing dependencies for {env_name}; Command: {cmd}")
-                        self.exec(cmd.split(" "), timeout=self.timeout)
+                        self.exec(cmd.split(" "))
                     else:
                         # Create environment from yml
                         path_to_reqs = get_environment_yml(
