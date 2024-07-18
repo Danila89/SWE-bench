@@ -167,8 +167,6 @@ def get_requirements(instance: dict, save_path: str = None):
     # Combine all requirements into single text body
     all_reqs = "\n".join(all_requirements.values())
 
-    if save_path is None:
-        return all_reqs
 
     path_to_reqs = os.path.join(save_path, "requirements.txt")
     with open(path_to_reqs, "w") as f:

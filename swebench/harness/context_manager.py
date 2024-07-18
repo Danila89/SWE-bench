@@ -86,13 +86,23 @@ class ExecWrapper:
             self.logger.write(f"Return Code: {output.returncode}", level=DEBUG)
             return output
         except subprocess.CalledProcessError as e:
-            if raise_error and self.logger is not None:
+            if self.logger is not None:
                 self.logger.write(f"Error: {e}", level=ERROR)
                 self.logger.write(f"Error stdout: {e.stdout}", level=ERROR)
                 if e.stderr:
                     self.logger.write(f"Error stderr: {e.stderr}", level=ERROR)
                 self.logger.write(f"Error traceback: {format_exc()}", level=ERROR)
+            if raise_error:
                 raise e
+        except subprocess.TimeoutExpired as e:
+            if self.logger is not None:
+                self.logger.write(f"Error: {e}", level=ERROR)
+                self.logger.write(f"Error stdout: {e.stdout}", level=ERROR)
+                if e.stderr:
+                    self.logger.write(f"Error stderr: {e.stderr}", level=ERROR)
+                self.logger.write(f"Error traceback: {format_exc()}", level=ERROR)
+            if raise_error:
+                raise e    
 
 
 class TestbedContextManager:
@@ -298,6 +308,8 @@ class TestbedContextManager:
         exec_cmd = os.path.join(self.path_conda, "bin", "conda")
         env_list = [e.split("/")[-1] for e in get_conda_env_names(exec_cmd)]
 
+        current_instance_versions = set([instance["version"] for instance in self.task_instances])
+
         # Set up testbed (environment, github repo) for each repo
         for repo, version_to_setup_ref in self.setup_refs.items():
             repo_prefix = repo.replace("/", "__")
@@ -310,8 +322,8 @@ class TestbedContextManager:
 
             # Create conda environment per version of the repo
             for version, install in MAP_VERSION_TO_INSTALL[repo].items():
-                # Skip if none of the task instances are for this version
-                if version not in version_to_setup_ref:
+                # Skip if none of the task instances are for this version or version is not in instances list 
+                if version not in version_to_setup_ref or version not in current_instance_versions:
                     continue
 
                 # Name for both environment and github repo
@@ -350,7 +362,7 @@ class TestbedContextManager:
                     path_to_reqs = get_requirements(setup_ref_instance, self.testbed)
                     cmd = f". {path_activate} {env_name} && echo 'activate successful' && pip install -r {path_to_reqs}"
                     self.log.write(f"Installing dependencies for {env_name}; Command: {cmd}")
-                    self.exec(cmd, shell=True, executable='/bin/bash', raise_error=False)
+                    self.exec(cmd, shell=True, executable='/bin/bash', raise_error=False, timeout=self.timeout)
                     os.remove(path_to_reqs)
                 elif pkgs == "environment.yml":
                     if "no_use_env" in install and install["no_use_env"]:
@@ -368,7 +380,7 @@ class TestbedContextManager:
                         # Install dependencies
                         cmd = f"{exec_cmd} env update -f {path_to_reqs}"
                         self.log.write(f"Installing dependencies for {env_name}; Command: {cmd}")
-                        self.exec(cmd.split(" "))
+                        self.exec(cmd.split(" "), timeout=self.timeout)
                     else:
                         # Create environment from yml
                         path_to_reqs = get_environment_yml(
@@ -386,7 +398,10 @@ class TestbedContextManager:
                     os.remove(path_to_reqs)
                 else:
                     # Create environment + install dependencies
-                    cmd = f"{exec_cmd} create -n {env_name} python={install['python']} {pkgs} -y"
+                    cmd = f"{exec_cmd} create -n {env_name} python={install['python']}"
+                    if pkgs:
+                        cmd += f" {pkgs}"
+                    cmd += " -y"
                     self.log.write(f"Creating environment {env_name}")
                     self.exec(cmd.split(" "), raise_error=False)
                 
