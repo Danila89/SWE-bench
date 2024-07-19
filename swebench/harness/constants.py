@@ -675,7 +675,7 @@ MAP_REPO_TO_TEST_FRAMEWORK = {
     "swe-bench/humanevalfix-java": "javac Main.java Test.java; java Test",
     "sympy/sympy": "bin/test -C --verbose",
     "pydantic/pydantic": "pytest -rA --tb=no -p no:cacheprovider -W ignore::DeprecationWarning",
-    "iterative/dvc": TEST_PYTEST
+    "iterative/dvc": "pytest -rA --tb=no -p no:cacheprovider -W ignore::DeprecationWarning"
 }
 
 # Constants - Task Instance Requirements File Paths
