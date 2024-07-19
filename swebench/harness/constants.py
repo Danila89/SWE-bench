@@ -564,7 +564,8 @@ MAP_VERSION_TO_INSTALL_PYDANTIC.update({
 
 MAP_VERSION_TO_INSTALL_DVC = {
     k: {
-        "python": "3.7", "pre_install": ["apt install -y make gcc"],
+        "python": "3.7", "pre_install": ["apt update && apt install -y make gcc", 
+                                         "sed -i -E 's/moto==1\.3\.[0-9]+\.dev[0-9]+/moto==1.3/' setup.py"],
     }
     for k in ['0.10', '0.13', '0.14', '0.16', '0.17', '0.18', '0.19', '0.20', '0.21', '0.22', 
               '0.23', '0.24', '0.25', '0.27', '0.28', '0.29', '0.30', '0.31', '0.32', '0.33',
@@ -584,7 +585,7 @@ MAP_VERSION_TO_INSTALL_DVC = {
 
 MAP_VERSION_TO_INSTALL_DVC.update({
     k: {**MAP_VERSION_TO_INSTALL_DVC[k], "packages": "requirements.txt",  "install": "pip install -e ."} 
-    for k in ['0.10', '0.13', '0.14', '0.16', '0.17', '0.18', '0.19', '0.20', '0.21', '0.22', 
+    for k in ['0.8', '0.9', '0.10', '0.13', '0.14', '0.16', '0.17', '0.18', '0.19', '0.20', '0.21', '0.22', 
               '0.23', '0.24', '0.25', '0.27', '0.28', '0.29', '0.30', '0.31', '0.32', '0.33',
               '0.34', '0.35', '0.40']
 })
@@ -593,8 +594,8 @@ MAP_VERSION_TO_INSTALL_DVC.update({
     k: {**MAP_VERSION_TO_INSTALL_DVC[k], "install": "pip install -e .[tests]"} 
     for k in ['0.41', '0.50', '0.51', '0.52', '0.53', '0.54', '0.55',
               '0.57', '0.58', '0.59', '0.60', '0.61', '0.62', '0.63', '0.66', '0.69', '0.71',
-              '0.72', '0.74', '0.75', '0.77', '0.78', '0.8', '0.80', '0.81', '0.82', '0.84',
-              '0.85', '0.86', '0.87', '0.88', '0.89', '0.9', '0.90', '0.91', '0.92', '0.93']
+              '0.72', '0.74', '0.75', '0.77', '0.78', '0.80', '0.81', '0.82', '0.84',
+              '0.85', '0.86', '0.87', '0.88', '0.89', '0.90', '0.91', '0.92', '0.93']
 })
 
 MAP_VERSION_TO_INSTALL_DVC.update({
@@ -603,7 +604,7 @@ MAP_VERSION_TO_INSTALL_DVC.update({
 })
 
 MAP_VERSION_TO_INSTALL_DVC.update({
-    k: {**MAP_VERSION_TO_INSTALL_DVC[k], "python": "3.9", "install": "pip install -e .[tests]"}
+    k: {**MAP_VERSION_TO_INSTALL_DVC[k], "python": "3.8", "install": "pip install -e .[tests]"}
     for k in ['2.0', '2.1', '2.10', '2.11', '2.12', '2.13', '2.14', '2.16', '2.17', 
               '2.18', '2.19', '2.2', '2.20', '2.21', '2.23', '2.24', '2.25', '2.28', 
               '2.29', '2.3', '2.30', '2.34', '2.36', '2.39', '2.4', '2.42', '2.43', 
