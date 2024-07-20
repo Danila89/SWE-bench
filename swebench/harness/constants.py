@@ -599,7 +599,7 @@ MAP_VERSION_TO_INSTALL_DVC.update({
 })
 
 MAP_VERSION_TO_INSTALL_DVC.update({
-    k: {**MAP_VERSION_TO_INSTALL_DVC[k], "python": "3.8", "install": "pip install -e .[tests]"} 
+    k: {**MAP_VERSION_TO_INSTALL_DVC[k], "python": "3.8", "install": "pip install -e .[tests] && pip install pytest==7.1.2 --upgrade"} 
     for k in ['1.0', '1.1', '1.10', '1.11', '1.2', '1.3', '1.4', '1.5', '1.6', '1.7', '1.8', '1.9', ]
 })
 
