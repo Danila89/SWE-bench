@@ -126,7 +126,7 @@ def main(args):
     task_instances = get_instances(args.instances_path)
     task_instances = sorted(task_instances, key=lambda x: x["instance_id"])
     if args.instance_id is not None:
-        task_instances = [t for t in task_instances if t["instance_id"] == args.instance_id]
+        task_instances = [t for t in task_instances if t["instance_id"] in args.instance_id.split(',')]
     if args.sample is not None:
         if len(task_instances) > args.sample:
             task_instances = random.sample(task_instances, args.sample)
