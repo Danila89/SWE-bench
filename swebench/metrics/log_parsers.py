@@ -188,6 +188,7 @@ parse_log_sphinx = parse_log_pytest_v2
 
 parse_log_pydantic = parse_log_pytest
 parse_log_dvc = parse_log_pytest
+parse_log_pyyaml = parse_log_pytest
 
 MAP_REPO_TO_PARSER = {
     "astropy/astropy": parse_log_astropy,
@@ -209,5 +210,6 @@ MAP_REPO_TO_PARSER = {
     "sphinx-doc/sphinx": parse_log_sphinx,
     "sympy/sympy": parse_log_sympy,
     "pydantic/pydantic": parse_log_pydantic,
-    "iterative/dvc": parse_log_dvc
+    "iterative/dvc": parse_log_dvc,
+    "yaml/pyyaml": parse_log_pyyaml,
 }

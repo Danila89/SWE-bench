@@ -3,7 +3,7 @@ import json
 import os
 from datasets import load_from_disk, load_dataset
 from swebench.harness.constants import APPLY_PATCH_PASS, KEY_INSTANCE_ID
-from swebench.metrics.log_parsers import MAP_REPO_TO_PARSER, TestStatus
+from swebench.metrics.log_parsers import MAP_REPO_TO_PARSER, TestStatus, parse_log_pytest
 from typing import Tuple
 
 
@@ -40,7 +40,7 @@ def get_logs_eval(log_fp: str) -> Tuple[dict, bool]:
         dict: status map
     """
     repo = get_repo_from_lp(log_fp)
-    log_parser = MAP_REPO_TO_PARSER[repo]
+    log_parser = MAP_REPO_TO_PARSER.get(repo, parse_log_pytest)
 
     with open(log_fp) as f:
         content = f.read()

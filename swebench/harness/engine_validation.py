@@ -107,12 +107,9 @@ def setup_testbed(data: dict):
 
         if len(distributed_task_list) == 1:
             data_dict.func(distributed_task_list[0])
-            return
-
-        pool = Pool(processes=len(distributed_task_list))
-        pool.map(data_dict.func, distributed_task_list)
-        pool.close()
-        pool.join()
+        else:
+            for task in distributed_task_list:
+                data_dict.func(task)
 
 
 def main(args):
@@ -130,6 +127,10 @@ def main(args):
     if args.sample is not None:
         if len(task_instances) > args.sample:
             task_instances = random.sample(task_instances, args.sample)
+    for t in task_instances:
+        if "version" not in t:
+            t["version"] = "0.0"
+    task_instances = sorted(task_instances, key=lambda x: x["instance_id"])
     task_instances_groups = split_instances(task_instances, args.num_workers)
 
     data_groups = [
@@ -146,12 +147,9 @@ def main(args):
 
     if args.num_workers == 1:
         setup_testbed(data_groups[0])
-        return
-
-    pool = Pool(processes=args.num_workers)
-    pool.map(setup_testbed, data_groups)
-    pool.close()
-    pool.join()
+    else:
+        with Pool(processes=args.num_workers) as pool:
+            pool.map(setup_testbed, data_groups)
 
 
 if __name__ == "__main__":

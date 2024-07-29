@@ -11,7 +11,7 @@ from swebench.metrics.getters import (
     get_diffs,
     get_repo_from_lp,
 )
-from swebench.metrics.log_parsers import MAP_REPO_TO_PARSER
+from swebench.metrics.log_parsers import MAP_REPO_TO_PARSER, parse_log_pytest
 from typing import Tuple
 
 
@@ -104,11 +104,11 @@ def monitor_logs_same_diff(log_dir: str, repo: str = None) -> Tuple[list, list]:
     file_format = f"{repo.split('/')[0]}*.log" if repo else "*.log"
     for log_fp in glob.glob(os.path.join(log_dir, file_format)):
         if repo:
-            log_parser = MAP_REPO_TO_PARSER[repo]
+            log_parser = MAP_REPO_TO_PARSER.get(repo, parse_log_pytest)
         else:
             # Get repo from log file path
             repo = get_repo_from_lp(log_fp)
-            log_parser = MAP_REPO_TO_PARSER[repo]
+            log_parser = MAP_REPO_TO_PARSER.get(repo, parse_log_pytest)
 
         sms, found = log_path_to_sms(log_fp, log_parser)
         if not found:

@@ -624,6 +624,10 @@ MAP_VERSION_TO_INSTALL_DVC.update({
               '3.49', '3.50', '3.51', '3.6']
 })
 
+MAP_VERSION_TO_INSTALL_PLACEHOLDER = {
+    "0.0" : {"python": "3.9", "packages": "pytest", "install": "pip install -e ."}
+}
+
 
 # Constants - Task Instance Instllation Environment
 MAP_VERSION_TO_INSTALL = {
@@ -659,6 +663,7 @@ MAP_REPO_TO_INSTALL = {}
 
 # Constants - Task Instance Test Frameworks
 TEST_PYTEST = "pytest --no-header -rA --tb=no -p no:cacheprovider"
+TEST_PYTEST_WO_DEPRECATION = "pytest --no-header -rA --tb=no -p no:cacheprovider -W ignore::DeprecationWarning"
 MAP_REPO_TO_TEST_FRAMEWORK = {
     "astropy/astropy": TEST_PYTEST,
     "django/django": "./tests/runtests.py --verbosity 2",
@@ -683,8 +688,8 @@ MAP_REPO_TO_TEST_FRAMEWORK = {
     "swe-bench/humanevalfix-go": "go test",
     "swe-bench/humanevalfix-java": "javac Main.java Test.java; java Test",
     "sympy/sympy": "bin/test -C --verbose",
-    "pydantic/pydantic": "pytest -rA --tb=no -p no:cacheprovider -W ignore::DeprecationWarning",
-    "iterative/dvc": "pytest -rA --tb=no -p no:cacheprovider -W ignore::DeprecationWarning"
+    "pydantic/pydantic": TEST_PYTEST_WO_DEPRECATION,
+    "iterative/dvc": TEST_PYTEST_WO_DEPRECATION
 }
 
 # Constants - Task Instance Requirements File Paths

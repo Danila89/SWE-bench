@@ -21,7 +21,7 @@ MAP_REPO_TO_VERSION_PATHS = {
     "sympy/sympy": ["sympy/release.py", "sympy/__init__.py"],
     "pydantic/pydantic": ["pydantic/version.py", ],
     "encode/django-rest-framework": ["rest_framework/__init__.py", "djangorestframework/__init__.py"],
-    "iterative" : ["dvc/version.py"]
+    "iterative/dvc" : ["dvc/version.py"]
 }
 
 # Cosntants - Task Instance Version Regex Pattern

@@ -14,7 +14,7 @@ from swebench.metrics.getters import (
     test_failed,
     test_passed,
 )
-from swebench.metrics.log_parsers import MAP_REPO_TO_PARSER
+from swebench.metrics.log_parsers import MAP_REPO_TO_PARSER, parse_log_pytest
 
 
 def convert_log_to_ground_truth(
@@ -32,7 +32,7 @@ def convert_log_to_ground_truth(
     """
     inst_file_name = get_file_name_from_lp(log_fp)
     repo = get_repo_from_lp(log_fp)
-    log_parser = MAP_REPO_TO_PARSER[repo]
+    log_parser = MAP_REPO_TO_PARSER.get(repo, parse_log_pytest)
 
     sms, found = log_path_to_sms(log_fp, log_parser)
     if not found:
