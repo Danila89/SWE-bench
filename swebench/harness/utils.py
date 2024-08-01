@@ -4,7 +4,7 @@ import re
 import requests
 import subprocess
 
-from collections import OrderedDict
+from collections import OrderedDict, defaultdict
 from datetime import datetime
 from dotenv import load_dotenv
 from git import Repo
@@ -268,29 +268,34 @@ def clone_repo(repo_name: str, path: str, token: str = None) -> bool:
         print(e)
         return False
 
-
 def split_instances(input_list: list, n: int) -> list:
     """
-    Split a list into n approximately equal length sublists
+    Split a list of dictionaries into n sublists based on the 'repo' field
 
     Args:
-        input_list (list): List to split
+        input_list (list): List of dictionaries to split
         n (int): Number of sublists to split into
     Returns:
         result (list): List of sublists
     """
-    avg_length = len(input_list) // n
-    remainder = len(input_list) % n
-    result, start = [], 0
-
-    for i in range(n):
-        length = avg_length + 1 if i < remainder else avg_length
-        sublist = input_list[start : start + length]
-        result.append(sublist)
-        start += length
-
+    # Group instances by repo
+    repo_groups = defaultdict(list)
+    for item in input_list:
+        repo_groups[item['repo']].append(item)
+    
+    # Create n empty sublists
+    result = [[] for _ in range(n)]
+    
+    # Sort repos by size (largest first) to ensure more even distribution
+    sorted_repos = sorted(repo_groups.items(), key=lambda x: len(x[1]), reverse=True)
+    
+    # Distribute repos to sublists
+    for repo, instances in sorted_repos:
+        # Find the sublist with the least items
+        target_sublist = min(result, key=len)
+        target_sublist.extend(instances)
+    
     return result
-
 
 def find_python_by_date(target_date, date_format="%Y%m%d"):
     """

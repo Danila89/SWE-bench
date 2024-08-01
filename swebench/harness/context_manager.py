@@ -627,7 +627,7 @@ class TaskEnvContextManager:
                 cmd_pre_install = f"{self.cmd_activate} && {pre_install}"
                 self.log.write(f"Running pre-install setup command: {cmd_pre_install}")
                 out_pre_install = self.exec(
-                    cmd_pre_install, timeout=self.timeout, shell=True, raise_error=False
+                    cmd_pre_install, timeout=self.timeout, shell=True, raise_error=False, executable='/bin/bash'
                 )
                 if out_pre_install is None:
                     self.log.write(f"Some error in preinstall", level=ERROR)
