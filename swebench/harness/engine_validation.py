@@ -73,49 +73,59 @@ def verify_task_instances(data: dict):
                 continue
 
 
-def setup_testbed(data: dict):
-    """
-    Creates testbed context manager and runs verify_task_instances in parallel
+from concurrent.futures import ProcessPoolExecutor
+import random
+from multiprocessing import cpu_count
 
-    Args:
-        data: Dict containing task instances and other data
-        conda_link: URL to conda installation to use
-        task_instances: List of task instances
-        log_dir: Path to log directory
-        path_conda: Path to miniconda3 or anaconda installation
-        testbed: Path to testbed directory
-        temp_dir: Path to temporary directory for storing virtual envs
-        timeout: Timeout (seconds) for testing script execution
-        verbose: Verbose mode
-    """
+def enter_tcm(tcm):
+    return tcm.__enter__()
+
+def exit_tcm(tcm):
+    tcm.__exit__(None, None, None)
+
+def execute_func(args):
+    task_list, func = args
+    func(task_list)
+
+def setup_testbed(data: dict, workers: int):
     data_dict = DotDict(data)
-    with TestbedContextManager(
-        data_dict.task_instances,
-        data_dict.log_dir,
-        conda_link=data_dict.conda_link,
-        path_conda=data_dict.path_conda,
-        testbed=data_dict.testbed,
-        temp_dir=data_dict.temp_dir,
-        timeout=data_dict.timeout,
-        verbose=data_dict.verbose,
-    ) as tcm:
-        distributed_task_list = tcm.get_distributed_tasks()
-        for task_list in distributed_task_list:
-            print(
-                f"{task_list['testbed']}: {len(task_list['task_instances'])} instances"
-            )
-
-        if len(distributed_task_list) == 1:
-            data_dict.func(distributed_task_list[0])
-        else:
-            for task in distributed_task_list:
-                data_dict.func(task)
-
+    
+    # Create TestbedContextManager instances without entering them
+    tcm_instances = [
+        TestbedContextManager(
+            [task_instance],  # Each manager handles one task instance
+            data_dict.log_dir,
+            conda_link=data_dict.conda_link,
+            path_conda=data_dict.path_conda,
+            testbed=data_dict.testbed,
+            temp_dir=data_dict.temp_dir,
+            timeout=data_dict.timeout,
+            verbose=data_dict.verbose,
+        )
+        for task_instance in data_dict.task_instances
+    ]
+    
+    # Parallelize the __enter__ method
+    with ProcessPoolExecutor(max_workers=workers) as executor:
+        tcm_list = list(executor.map(enter_tcm, tcm_instances))
+    
+    try:
+        distributed_task_list = [tcm.get_distributed_tasks() for tcm in tcm_list]
+        flattened_task_list = [item for sublist in distributed_task_list for item in sublist]
+        
+        for task_list in flattened_task_list:
+            print(f"{task_list['testbed']}: {len(task_list['task_instances'])} instances")
+        
+        # Parallelize data_dict.func execution
+        with ProcessPoolExecutor(max_workers=workers) as executor:
+            executor.map(execute_func, [(task_list, data_dict.func) for task_list in flattened_task_list])
+    
+    finally:
+        # Ensure proper cleanup
+        with ProcessPoolExecutor(max_workers=workers) as executor:
+            executor.map(exit_tcm, tcm_list)
 
 def main(args):
-    """
-    Splits task instances into multiple groups if num_workers > 1
-    """
     random.seed(42)
     if args.num_workers is None:
         args.num_workers = cpu_count()
@@ -131,25 +141,15 @@ def main(args):
         if "version" not in t:
             t["version"] = "0.0"
     task_instances = sorted(task_instances, key=lambda x: x["instance_id"])
-    task_instances_groups = split_instances(task_instances, args.num_workers)
 
-    data_groups = [
-        {
-            "task_instances": g,
-            "func": verify_task_instances,
-            **vars(args),
-        }
-        for g in task_instances_groups
-    ]
+    data = {
+        "task_instances": task_instances,
+        "func": verify_task_instances,
+        **vars(args),
+    }
+    del data["instances_path"]
 
-    for group in data_groups:
-        del group["instances_path"]
-
-    if args.num_workers == 1:
-        setup_testbed(data_groups[0])
-    else:
-        with Pool(processes=args.num_workers) as pool:
-            pool.map(setup_testbed, data_groups)
+    setup_testbed(data, args.num_workers)
 
 
 if __name__ == "__main__":
