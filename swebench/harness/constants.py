@@ -4,7 +4,7 @@ MAP_VERSION_TO_INSTALL_SKLEARN = {
     k: {
         "python": "3.6",
         "packages": "numpy scipy cython pytest pandas matplotlib",
-        "pre_install": ["apt install g++ -y"],
+        "pre_install": ["sudo apt install g++ -y"],
         "install": "pip install -v --no-use-pep517 --no-build-isolation -e .",
         "arch_specific_packages": {
             "aarch64": "gxx_linux-aarch64 gcc_linux-aarch64 make",
@@ -21,7 +21,7 @@ MAP_VERSION_TO_INSTALL_SKLEARN.update(
         k: {
             "python": "3.9",
             "packages": "numpy scipy cython pytest pandas matplotlib joblib threadpoolctl",
-            "pre_install": ["apt install g++ -y"],
+            "pre_install": ["sudo apt install g++ -y"],
             "install": "pip install -v --no-use-pep517 --no-build-isolation -e .",
             "arch_specific_packages": {
                 "aarch64": "gxx_linux-aarch64 gcc_linux-aarch64 make",
@@ -251,7 +251,7 @@ MAP_VERSION_TO_INSTALL_MATPLOTLIB = {
     k: {
         "python": "3.11",
         "packages": "environment.yml",
-        "pre_install": ["apt install -y make gcc g++ pkg-config libfreetype6-dev ghostscript texlive-xetex dvipng texlive-full"],
+        "pre_install": ["sudo apt install -y make gcc g++ pkg-config libfreetype6-dev ghostscript texlive-xetex dvipng texlive-full"],
         "install": "python -m pip install -e .",
         "pip_packages": [
             "contourpy==1.1.0",
@@ -279,7 +279,7 @@ MAP_VERSION_TO_INSTALL_MATPLOTLIB.update(
         k: {
             "python": "3.8",
             "packages": "requirements.txt",
-            "pre_install": ["apt install -y make gcc g++ pkg-config libfreetype6-dev ghostscript texlive-xetex dvipng texlive-full"],
+            "pre_install": ["sudo apt install -y make gcc g++ pkg-config libfreetype6-dev ghostscript texlive-xetex dvipng texlive-full"],
             "install": "python -m pip install -e .",
             "arch_specific_packages": {
                 "aarch64": "gxx_linux-aarch64 gcc_linux-aarch64 make",
@@ -293,7 +293,7 @@ MAP_VERSION_TO_INSTALL_MATPLOTLIB.update(
         k: {
             "python": "3.7",
             "packages": "requirements.txt",
-            "pre_install": ["apt install -y make gcc g++ pkg-config libfreetype6-dev ghostscript texlive-xetex dvipng texlive-full"],
+            "pre_install": ["sudo apt install -y make gcc g++ pkg-config libfreetype6-dev ghostscript texlive-xetex dvipng texlive-full"],
             "install": "python -m pip install -e .",
             "arch_specific_packages": {
                 "aarch64": "gxx_linux-aarch64 gcc_linux-aarch64 make",
@@ -306,7 +306,7 @@ MAP_VERSION_TO_INSTALL_MATPLOTLIB.update(
     {
         k: {
             "python": "3.5",
-            "pre_install": ["apt install -y make gcc g++ pkg-config libfreetype6-dev ghostscript texlive-xetex dvipng texlive-full"],
+            "pre_install": ["sudo apt install -y make gcc g++ pkg-config libfreetype6-dev ghostscript texlive-xetex dvipng texlive-full"],
             "install": "python setup.py build; python setup.py install",
             "arch_specific_packages": {
                 "aarch64": "gxx_linux-aarch64 gcc_linux-aarch64 make",
@@ -457,7 +457,7 @@ MAP_VERSION_TO_INSTALL_PYVISTA = {
     k: {
         "python": "3.9",
         "packages": "vtk",
-        "pre_install": ["apt install -y libgl1-mesa-glx libgl1-mesa-dev"],
+        "pre_install": ["sudo apt install -y libgl1-mesa-glx libgl1-mesa-dev"],
         "install": "pip install -e .",
         "pip_packages": ["pytest"],
     }
@@ -467,7 +467,7 @@ MAP_VERSION_TO_INSTALL_PYVISTA.update({
     k: {
         "python": "3.9",
         "packages": "requirements.txt",
-        "pre_install": ["apt install -y libgl1-mesa-glx libgl1-mesa-dev"],
+        "pre_install": ["sudo apt install -y libgl1-mesa-glx libgl1-mesa-dev"],
         "install": "pip install -e .",
         "pip_packages": ["pytest"],
     }
@@ -512,7 +512,7 @@ MAP_VERSION_TO_INSTALL_MARSHMALLOW = {
 MAP_VERSION_TO_INSTALL_PVLIB = {
     k: {
         "python": "3.9",
-        "pre_install": ["apt install -y pkg-config libhdf5-dev"],
+        "pre_install": ["sudo apt install -y pkg-config libhdf5-dev"],
         "install": "pip install -e .[all]",
         "packages": "pandas scipy",
         "pip_packages": ["jupyter", "ipython", "matplotlib", "pytest", "flake8"]
@@ -543,7 +543,7 @@ MAP_VERSION_TO_INSTALL_HUMANEVAL= {k: { "python": "3.9" } for k in ['1.0']}
 
 MAP_VERSION_TO_INSTALL_PYDANTIC = {
     k: {
-        "pre_install": ["apt install -y make gcc"],
+        "pre_install": ["sudo apt install -y make gcc"],
         "packages": "requirements.txt",
         "python": "3.7",
     }
@@ -564,7 +564,7 @@ MAP_VERSION_TO_INSTALL_PYDANTIC.update({
 
 MAP_VERSION_TO_INSTALL_DVC = {
     k: {
-        "python": "3.7", "pre_install": ["apt update && apt install -y make gcc", 
+        "python": "3.7", "pre_install": ["sudo apt update && sudo apt install -y make gcc",
                                          "sed -i -E 's/moto==1\.3\.[0-9]+\.dev[0-9]+/moto==1.3/' setup.py",],
     }
     for k in ['0.10', '0.13', '0.14', '0.16', '0.17', '0.18', '0.19', '0.20', '0.21', '0.22', 
@@ -605,7 +605,7 @@ MAP_VERSION_TO_INSTALL_DVC.update({
 
 MAP_VERSION_TO_INSTALL_DVC.update({
     k: {**MAP_VERSION_TO_INSTALL_DVC[k], "python": "3.8", 
-        "pre_install": ["apt update && apt install -y make gcc"],
+        "pre_install": ["sudo apt update && sudo apt install -y make gcc"],
         "install": "pip install -e . && pip install -e .[tests] && pip install pytest==7.1 fsspec==2022.11.0 --upgrade"}
     for k in ['2.10', '2.11', '2.12', '2.13', '2.14', '2.16', '2.17', 
               '2.18', '2.19', '2.2', '2.20', '2.21', '2.23', '2.24', '2.25', '2.28', 
@@ -615,7 +615,7 @@ MAP_VERSION_TO_INSTALL_DVC.update({
 MAP_VERSION_TO_INSTALL_DVC.update({
     k: {**MAP_VERSION_TO_INSTALL_DVC[k], "python": "3.9", 
         "install": "pip install . && pip install -e .[tests] && pip install fsspec==2022.11.0 --upgrade",
-        "pre_install": ["apt update && apt install -y make gcc"]}
+        "pre_install": ["sudo apt update && sudo apt install -y make gcc"]}
     for k in ['2.43', 
               '2.44', '2.45', '2.46', '2.47', '2.48', '2.49', '2.5', '2.51', '2.52', 
               '2.53', '2.55', '2.56', '2.57', '2.58', '2.6', '2.7', '2.8', '2.9', 
