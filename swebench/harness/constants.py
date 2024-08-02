@@ -79,13 +79,17 @@ MAP_VERSION_TO_INSTALL_DJANGO = {
     k: {
         "python": "3.5",
         "packages": "requirements.txt",
+        "pre_install": ["sudo apt install -y gcc"],
         "install": "python setup.py install",
     }
     for k in ["1.7", "1.8", "1.9", "1.10", "1.11", "2.0", "2.1", "2.2"]
 }
 MAP_VERSION_TO_INSTALL_DJANGO.update(
     {
-        k: {"python": "3.5", "install": "python setup.py install"}
+        k: {
+            "python": "3.5",
+            "pre_install": ["sudo apt install -y gcc"],
+            "install": "python setup.py install"}
         for k in ["1.4", "1.5", "1.6"]
     }
 )
@@ -94,6 +98,7 @@ MAP_VERSION_TO_INSTALL_DJANGO.update(
         k: {
             "python": "3.6",
             "packages": "requirements.txt",
+            "pre_install": ["sudo apt install -y gcc"],
             "install": "python -m pip install -e .",
         }
         for k in ["3.0", "3.1", "3.2"]
@@ -104,6 +109,7 @@ MAP_VERSION_TO_INSTALL_DJANGO.update(
         k: {
             "python": "3.8",
             "packages": "requirements.txt",
+            "pre_install": ["sudo apt install -y gcc"],
             "install": "python -m pip install -e .",
         }
         for k in ["4.0"]
@@ -114,6 +120,7 @@ MAP_VERSION_TO_INSTALL_DJANGO.update(
         k: {
             "python": "3.9",
             "packages": "requirements.txt",
+            "pre_install": ["sudo apt install -y gcc"],
             "install": "python -m pip install -e .",
         }
         for k in ["4.1", "4.2"]
@@ -124,6 +131,7 @@ MAP_VERSION_TO_INSTALL_DJANGO.update(
         k: {
             "python": "3.11",
             "packages": "requirements.txt",
+            "pre_install": ["sudo apt install -y gcc"],
             "install": "python -m pip install -e .",
         }
         for k in ["5.0"]
@@ -370,6 +378,7 @@ for k in ["3.0", "3.1", "3.2", "3.3", "3.4", "3.5", "4.0", "4.1", "4.2", "4.3", 
 MAP_VERSION_TO_INSTALL_ASTROPY = {
     k: {
         "python": "3.9",
+        "pre_install": ["sudo apt install -y gcc"],
         "install": "pip install -e .[test]",
         "pip_packages": [
             "attrs==23.1.0", "exceptiongroup==1.1.3", "execnet==2.0.2", "hypothesis==6.82.6",
@@ -386,7 +395,7 @@ MAP_VERSION_TO_INSTALL_ASTROPY = {
 }
 
 for k in ["4.1", "4.2", "4.3", "5.0", "5.1", "5.2"]:
-    MAP_VERSION_TO_INSTALL_ASTROPY[k]["pre_install"] = [
+    MAP_VERSION_TO_INSTALL_ASTROPY[k]["pre_install"] += [
         'sed -i \'s/requires = \\["setuptools",/requires = \\["setuptools==68.0.0",/\' pyproject.toml',
     ]
 
