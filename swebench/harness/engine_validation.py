@@ -104,17 +104,30 @@ def setup_testbed(data: dict, workers: int):
         )
         for task_instance in data_dict.task_instances
     ]
+
+    tcm_instances_unique_repos = []
+    seen_repos = set()
+    for tcm in tcm_instances:
+        if tcm.task_instances[0]["repo"] not in seen_repos:
+            seen_repos.add(tcm.task_instances[0]["repo"])
+            tcm_instances_unique_repos.append(tcm)
     
-    # Parallelize the __enter__ method
+    # Parallelize the __enter__ method to make envs
     with ProcessPoolExecutor(max_workers=workers) as executor:
-        tcm_list = list(executor.map(enter_tcm, tcm_instances))
+        list(executor.map(enter_tcm, tcm_instances_unique_repos))
+
+    # Parallelize the __enter__ method to make tcms
+    with ProcessPoolExecutor(max_workers=workers) as executor:
+        tcm_list = list(executor.map(enter_tcm, tcm_instances_unique_repos))
     
     try:
         distributed_task_list = [tcm.get_distributed_tasks() for tcm in tcm_list]
         flattened_task_list = [item for sublist in distributed_task_list for item in sublist]
+
+
         
-        for task_list in flattened_task_list:
-            print(f"{task_list['testbed']}: {len(task_list['task_instances'])} instances")
+        # for task_list in flattened_task_list:
+        #     print(f"{task_list['testbed']}: {len(task_list['task_instances'])} instances")
         
         # Parallelize data_dict.func execution
         with ProcessPoolExecutor(max_workers=workers) as executor:

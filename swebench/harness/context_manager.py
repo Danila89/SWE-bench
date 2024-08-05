@@ -350,6 +350,12 @@ class TestbedContextManager:
                 if env_name in env_list:
                     self.log.write(f"Environment {env_name} already exists; skipping")
                     continue
+                
+                if "0.0" in env_name:
+                    cmd = f"{exec_cmd} create --name {env_name} --clone init_env -y"
+                    self.log.write(f"Creating environment {env_name} from init_env")
+                    self.exec(cmd, shell=True, executable='/bin/bash', raise_error=True, timeout=self.timeout)
+                    continue
 
                 # Get setup reference instance
                 setup_ref_instance = version_to_setup_ref[version]

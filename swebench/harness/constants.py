@@ -627,8 +627,9 @@ MAP_VERSION_TO_INSTALL_DVC.update({
 MAP_VERSION_TO_INSTALL_PLACEHOLDER = {
     "0.0" : {"python": "3.9",
              "install": "pip install --force-reinstall -e .; pip install -e .[test]; pip install -e .[testing]; pip install -e .[tests]; pip install -e .[dev]",
-             "pre_install": ["apt install -y make gcc g++ pkg-config",
-                              "pip install pytest cython distro pytest-cov pytest-xdist pytest-mock pytest-asyncio pytest-bdd pytest-benchmark"]}
+            #  "pre_install": ["apt install -y make gcc g++ pkg-config",
+            #                   "pip install pytest cython distro pytest-cov pytest-xdist pytest-mock pytest-asyncio pytest-bdd pytest-benchmark"]
+                              }
 }
 
 
