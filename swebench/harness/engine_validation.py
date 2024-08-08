@@ -118,7 +118,7 @@ def setup_testbed(data: dict, workers: int):
 
     # Parallelize the __enter__ method to make tcms
     with ProcessPoolExecutor(max_workers=workers) as executor:
-        tcm_list = list(executor.map(enter_tcm, tcm_instances_unique_repos))
+        tcm_list = list(executor.map(enter_tcm, tcm_instances))
     
     try:
         distributed_task_list = [tcm.get_distributed_tasks() for tcm in tcm_list]
