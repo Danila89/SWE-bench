@@ -342,7 +342,8 @@ class TestbedContextManager:
                     if clone_repo(repo, repo_path):
                         self.log.write(f"Cloned {repo} to {repo_path}")
                     else:
-                        raise Exception(f"Failed to clone {repo} to {repo_path}")
+                        self.log.write(f"Failed to clone {repo} to {repo_path}")
+                        continue
                 else:
                     self.log.write(f"Repo for {repo_prefix} version {version} exists: {repo_path}; skipping")
 

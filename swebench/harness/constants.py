@@ -626,10 +626,10 @@ MAP_VERSION_TO_INSTALL_DVC.update({
 
 MAP_VERSION_TO_INSTALL_PLACEHOLDER = {
     "0.0" : {"python": "3.9",
-             "install": "pip install -r requirements.txt; pip install --force-reinstall -e .; pip install -e .[test]; pip install -e .[testing]; pip install -e .[tests]; pip install -e .[dev]",
+             "install": "pip install -r requirements.txt; pip install -r requirements-dev.txt; pip install -r requirements-test.txt; pip install -r requirements_test.txt;  pip install -r requirements_dev.txt; pip install --force-reinstall -e .; pip install -e .[test]; pip install -e .[testing]; pip install -e .[tests]; pip install -e .[dev]",
             #  "pre_install": ["apt install -y make gcc g++ pkg-config",
-            #                   "pip install pytest cython distro pytest-cov pytest-xdist pytest-mock pytest-asyncio pytest-bdd pytest-benchmark"]
-                              }
+            #                   "pip install pytest cython distro pytest-cov pytest-xdist pytest-mock pytest-asyncio pytest-bdd pytest-benchmark pytest-randomly responses mock hypothesis freezegun trustme requests-mock requests tomlkit
+    }
 }
 
 
@@ -667,7 +667,7 @@ MAP_REPO_TO_INSTALL = {}
 
 # Constants - Task Instance Test Frameworks
 TEST_PYTEST = "pytest --no-header -rA --tb=no -p no:cacheprovider"
-TEST_PYTEST_WO_DEPRECATION = "pytest --no-header -rA --tb=no -p no:cacheprovider -W ignore::DeprecationWarning"
+TEST_PYTEST_WO_DEPRECATION = "pytest --no-header -rA -p no:cacheprovider -W ignore::DeprecationWarning"
 MAP_REPO_TO_TEST_FRAMEWORK = {
     "astropy/astropy": TEST_PYTEST,
     "django/django": "./tests/runtests.py --verbosity 2",

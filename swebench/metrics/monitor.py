@@ -57,8 +57,8 @@ def monitor_validation(
                     corrupt_patch.append(x)
                 else:
                     # If both, then both test patch and patch were applied successfully
-                    assert patch_applies == 2
-                    success.append(x)
+                    if patch_applies == 2:
+                        success.append(x)
             else:
                 # If no patch was applied, then installation failed
                 failed_install.append(x)
