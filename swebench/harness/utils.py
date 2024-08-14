@@ -150,7 +150,7 @@ def get_requirements(instance: dict, save_path: str = None):
     commit = 'environment_setup_commit' if 'environment_setup_commit' in instance else 'base_commit'
     all_requirements = OrderedDict()
 
-    for req_path in MAP_REPO_TO_REQS_PATHS[instance["repo"]]:
+    for req_path in MAP_REPO_TO_REQS_PATHS.get(instance["repo"], MAP_REPO_TO_REQS_PATHS['placeholder']):
         reqs_url = os.path.join(
             SWE_BENCH_URL_RAW, instance["repo"], instance[commit], req_path
         )
@@ -160,9 +160,8 @@ def get_requirements(instance: dict, save_path: str = None):
 
     if not all_requirements:
         print(
-            f"Could not find any valid requirements.txt at paths {MAP_REPO_TO_REQS_PATHS[instance['repo']]}"
+            f"Could not find any valid requirements.txt at paths {MAP_REPO_TO_REQS_PATHS.get(instance['repo'], MAP_REPO_TO_REQS_PATHS['placeholder'])}"
         )
-        return None
 
     # Combine all requirements into single text body
     all_reqs = "\n".join(all_requirements.values())
@@ -258,8 +257,7 @@ def clone_repo(repo_name: str, path: str, token: str = None) -> bool:
         if token is None:
             token = os.environ.get("GITHUB_TOKEN", "git")
         repo_url = (
-            f"https://{token}@github.com/mirror-dump/"
-            + repo_name.split("/")[-1]
+            f"https://{token}@github.com/{repo_name}"
             + ".git"
         )
         Repo.clone_from(repo_url, path)

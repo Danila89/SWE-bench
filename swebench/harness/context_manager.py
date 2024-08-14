@@ -14,11 +14,13 @@ from swebench.harness.constants import (
     MAP_REPO_TO_TEST_FRAMEWORK,
     MAP_REPO_VERSION_TO_CONDA_LINK,
     MAP_VERSION_TO_INSTALL,
+    MAP_VERSION_TO_INSTALL_PLACEHOLDER,
     RESET_FAILED,
     TESTS_FAILED,
     TESTS_PASSED,
     TESTS_TIMEOUT,
     TESTS_ERROR,
+    TEST_PYTEST_WO_DEPRECATION,
     PatchType,
 )
 from swebench.harness.utils import (
@@ -165,7 +167,7 @@ class TestbedContextManager:
         self.task_instances_grouped = {}
         for instance in self.task_instances:
             # Create test command from framework + directives
-            test_type = MAP_REPO_TO_TEST_FRAMEWORK[instance["repo"]]
+            test_type = MAP_REPO_TO_TEST_FRAMEWORK.get(instance["repo"], TEST_PYTEST_WO_DEPRECATION)
             instance["test_directives"] = get_test_directives(instance)
             instance["test_cmd"] = f"{test_type} {' '.join(instance['test_directives'])}"
 
@@ -311,6 +313,9 @@ class TestbedContextManager:
         # Set up testbed (environment, github repo) for each repo
         for repo, version_to_setup_ref in self.setup_refs.items():
             repo_prefix = repo.replace("/", "__")
+            
+            if repo not in MAP_VERSION_TO_INSTALL:
+                MAP_VERSION_TO_INSTALL[repo] = MAP_VERSION_TO_INSTALL_PLACEHOLDER
 
             # Run any repo-level installation commands if provided
             if repo in MAP_REPO_TO_INSTALL:
@@ -454,8 +459,9 @@ class TestbedContextManager:
                 self.log.write(f"Removed None version from repo {repo}")
                 del group[None]
             versions = list(group.keys())
+            repo_versions = MAP_VERSION_TO_INSTALL.get(repo, MAP_VERSION_TO_INSTALL_PLACEHOLDER)
             for version in versions:
-                if version not in MAP_VERSION_TO_INSTALL[repo]:
+                if version not in repo_versions:
                     self.log.write((
                         f"Removed {version} version from repo "
                         f"{repo} (Install instructions not given)"
@@ -607,7 +613,8 @@ class TaskEnvContextManager:
             bool: True if installation successful, False otherwise
         """
         # Get installation instructions by repo/version
-        specifications = MAP_VERSION_TO_INSTALL[instance["repo"]][instance["version"]]
+        repo_installs = MAP_VERSION_TO_INSTALL.get(instance["repo"], MAP_VERSION_TO_INSTALL_PLACEHOLDER)
+        specifications = repo_installs[instance["version"]]
 
         # Run pre-install set up if provided
         if "pre_install" in specifications:
@@ -615,7 +622,7 @@ class TaskEnvContextManager:
                 cmd_pre_install = f"{self.cmd_activate} && {pre_install}"
                 self.log.write(f"Running pre-install setup command: {cmd_pre_install}")
                 out_pre_install = self.exec(
-                    cmd_pre_install, timeout=self.timeout, shell=True, raise_error=False
+                    cmd_pre_install, timeout=self.timeout, shell=True, raise_error=False, executable='/bin/bash'
                 )
                 if out_pre_install is None:
                     self.log.write(f"Some error in preinstall", level=ERROR)
@@ -741,7 +748,8 @@ class TaskEnvContextManager:
                 f.write(f"Test Script: {test_cmd};\n")
 
             # Set environment variables if provided
-            specifications = MAP_VERSION_TO_INSTALL[instance["repo"]][instance["version"]]
+            repo_versions = MAP_VERSION_TO_INSTALL.get(instance["repo"], MAP_VERSION_TO_INSTALL_PLACEHOLDER)
+            specifications = repo_versions[instance["version"]]
             if "env_vars_test" in specifications:
                 self.exec.subprocess_args["env"].update(specifications["env_vars_test"])
 
