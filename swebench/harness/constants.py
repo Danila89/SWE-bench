@@ -1,3 +1,4 @@
+from collections import defaultdict
 from enum import Enum
 
 MAP_VERSION_TO_INSTALL_SKLEARN = {
@@ -663,6 +664,8 @@ MAP_VERSION_TO_INSTALL = {
     "iterative/dvc": MAP_VERSION_TO_INSTALL_DVC
 }
 
+MAP_VERSION_TO_INSTALL = defaultdict(lambda: MAP_VERSION_TO_INSTALL_PLACEHOLDER, MAP_VERSION_TO_INSTALL)
+
 # Constants - Repository Specific Installation Instructions
 MAP_REPO_TO_INSTALL = {}
 
@@ -697,7 +700,10 @@ MAP_REPO_TO_TEST_FRAMEWORK = {
     "iterative/dvc": TEST_PYTEST_WO_DEPRECATION
 }
 
+MAP_REPO_TO_TEST_FRAMEWORK = defaultdict(lambda: TEST_PYTEST_WO_DEPRECATION, MAP_REPO_TO_TEST_FRAMEWORK)
+
 # Constants - Task Instance Requirements File Paths
+MAP_REPO_TO_REQS_PATHS_PLACEHOLDER = ["requirements.txt", "requirements-dev.txt", "requirements-test.txt", "requirements_test.txt", "requirements_dev.txt"]
 MAP_REPO_TO_REQS_PATHS = {
     "django/django": ["tests/requirements/py3.txt"],
     "matplotlib/matplotlib": ["requirements/dev/dev-requirements.txt", "requirements/testing/travis_all.txt"],
@@ -710,8 +716,9 @@ MAP_REPO_TO_REQS_PATHS = {
             "requirements.txt",
             "benchmarks/requirements.txt",
             "tests/requirements-testing.txt"],
-    "iterative/dvc": ["requirements.txt", "test-requirements.txt", "tests/requirements.txt"],
-    "placeholder": ["requirements.txt", "requirements-dev.txt", "requirements-test.txt", "requirements_test.txt", "requirements_dev.txt"]}
+    "iterative/dvc": ["requirements.txt", "test-requirements.txt", "tests/requirements.txt"]}
+
+MAP_REPO_TO_REQS_PATHS = defaultdict(lambda: MAP_REPO_TO_REQS_PATHS_PLACEHOLDER, MAP_REPO_TO_REQS_PATHS)
 
 # Constants - Task Instance environment.yml File Paths
 MAP_REPO_TO_ENV_YML_PATHS = {

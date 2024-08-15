@@ -1,5 +1,6 @@
 import re
 
+from collections import defaultdict
 from swebench.metrics.constants import TestStatus
 
 
@@ -211,3 +212,5 @@ MAP_REPO_TO_PARSER = {
     "pydantic/pydantic": parse_log_pydantic,
     "iterative/dvc": parse_log_dvc
 }
+
+MAP_REPO_TO_PARSER = defaultdict(lambda: parse_log_pytest, MAP_REPO_TO_PARSER)
