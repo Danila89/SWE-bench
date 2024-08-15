@@ -257,7 +257,8 @@ def clone_repo(repo_name: str, path: str, token: str = None) -> bool:
         if token is None:
             token = os.environ.get("GITHUB_TOKEN", "git")
         repo_url = (
-            f"https://{token}@github.com/{repo_name}"
+            f"https://{token}@github.com/mirror-dump/"
+            + repo_name.split("/")[-1]
             + ".git"
         )
         Repo.clone_from(repo_url, path)
