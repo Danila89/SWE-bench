@@ -1,3 +1,4 @@
+from collections import defaultdict
 from enum import Enum
 
 MAP_VERSION_TO_INSTALL_SKLEARN = {
@@ -633,6 +634,15 @@ MAP_VERSION_TO_INSTALL_DVC.update({
               '3.49', '3.50', '3.51', '3.6']
 })
 
+MAP_VERSION_TO_INSTALL_PLACEHOLDER = {
+    "0.0" : {"python": "3.9",
+             "packages": "requirements.txt",
+             "pip_packages":['pytest', 'cython', 'distro', 'pytest-cov', 'pytest-xdist', 'pytest-mock', 'pytest-asyncio', 'pytest-bdd',
+                             'pytest-benchmark','pytest-randomly', 'responses', 'mock', 'hypothesis', 'freezegun', 'trustme', 'requests-mock', 'requests', 'tomlkit'],
+             "install": "pip install --force-reinstall -e .; pip install -e .[test]; pip install -e .[testing]; pip install -e .[tests]; pip install -e .[dev]",
+             "pre_install": ["apt install -y make gcc g++ pkg-config"]
+    }
+}
 
 # Constants - Task Instance Instllation Environment
 MAP_VERSION_TO_INSTALL = {
@@ -663,11 +673,14 @@ MAP_VERSION_TO_INSTALL = {
     "iterative/dvc": MAP_VERSION_TO_INSTALL_DVC
 }
 
+MAP_VERSION_TO_INSTALL = defaultdict(lambda: MAP_VERSION_TO_INSTALL_PLACEHOLDER, MAP_VERSION_TO_INSTALL)
+
 # Constants - Repository Specific Installation Instructions
 MAP_REPO_TO_INSTALL = {}
 
 # Constants - Task Instance Test Frameworks
 TEST_PYTEST = "pytest --no-header -rA --tb=no -p no:cacheprovider"
+TEST_PYTEST_WO_DEPRECATION = "pytest --no-header -rA --tb=no  -p no:cacheprovider -W ignore::DeprecationWarning"
 MAP_REPO_TO_TEST_FRAMEWORK = {
     "astropy/astropy": TEST_PYTEST,
     "django/django": "./tests/runtests.py --verbosity 2",
@@ -692,11 +705,14 @@ MAP_REPO_TO_TEST_FRAMEWORK = {
     "swe-bench/humanevalfix-go": "go test",
     "swe-bench/humanevalfix-java": "javac Main.java Test.java; java Test",
     "sympy/sympy": "bin/test -C --verbose",
-    "pydantic/pydantic": "pytest -rA --tb=no -p no:cacheprovider -W ignore::DeprecationWarning",
-    "iterative/dvc": "pytest -rA --tb=no -p no:cacheprovider -W ignore::DeprecationWarning"
+    "pydantic/pydantic": TEST_PYTEST_WO_DEPRECATION,
+    "iterative/dvc": TEST_PYTEST_WO_DEPRECATION
 }
 
+MAP_REPO_TO_TEST_FRAMEWORK = defaultdict(lambda: TEST_PYTEST_WO_DEPRECATION, MAP_REPO_TO_TEST_FRAMEWORK)
+
 # Constants - Task Instance Requirements File Paths
+MAP_REPO_TO_REQS_PATHS_PLACEHOLDER = ["requirements.txt", "requirements-dev.txt", "requirements-test.txt", "requirements_test.txt", "requirements_dev.txt"]
 MAP_REPO_TO_REQS_PATHS = {
     "django/django": ["tests/requirements/py3.txt"],
     "matplotlib/matplotlib": ["requirements/dev/dev-requirements.txt", "requirements/testing/travis_all.txt"],
@@ -709,8 +725,9 @@ MAP_REPO_TO_REQS_PATHS = {
             "requirements.txt",
             "benchmarks/requirements.txt",
             "tests/requirements-testing.txt"],
-    "iterative/dvc": ["requirements.txt", "test-requirements.txt", "tests/requirements.txt"],
-}
+    "iterative/dvc": ["requirements.txt", "test-requirements.txt", "tests/requirements.txt"]}
+
+MAP_REPO_TO_REQS_PATHS = defaultdict(lambda: MAP_REPO_TO_REQS_PATHS_PLACEHOLDER, MAP_REPO_TO_REQS_PATHS)
 
 # Constants - Task Instance environment.yml File Paths
 MAP_REPO_TO_ENV_YML_PATHS = {

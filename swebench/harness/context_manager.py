@@ -14,11 +14,13 @@ from swebench.harness.constants import (
     MAP_REPO_TO_TEST_FRAMEWORK,
     MAP_REPO_VERSION_TO_CONDA_LINK,
     MAP_VERSION_TO_INSTALL,
+    MAP_VERSION_TO_INSTALL_PLACEHOLDER,
     RESET_FAILED,
     TESTS_FAILED,
     TESTS_PASSED,
     TESTS_TIMEOUT,
     TESTS_ERROR,
+    TEST_PYTEST_WO_DEPRECATION,
     PatchType,
 )
 from swebench.harness.utils import (
@@ -311,6 +313,7 @@ class TestbedContextManager:
         # Set up testbed (environment, github repo) for each repo
         for repo, version_to_setup_ref in self.setup_refs.items():
             repo_prefix = repo.replace("/", "__")
+            
 
             # Run any repo-level installation commands if provided
             if repo in MAP_REPO_TO_INSTALL:
@@ -615,7 +618,7 @@ class TaskEnvContextManager:
                 cmd_pre_install = f"{self.cmd_activate} && {pre_install}"
                 self.log.write(f"Running pre-install setup command: {cmd_pre_install}")
                 out_pre_install = self.exec(
-                    cmd_pre_install, timeout=self.timeout, shell=True, raise_error=False
+                    cmd_pre_install, timeout=self.timeout, shell=True, raise_error=False, executable='/bin/bash'
                 )
                 if out_pre_install is None:
                     self.log.write(f"Some error in preinstall", level=ERROR)

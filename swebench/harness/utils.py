@@ -162,7 +162,6 @@ def get_requirements(instance: dict, save_path: str = None):
         print(
             f"Could not find any valid requirements.txt at paths {MAP_REPO_TO_REQS_PATHS[instance['repo']]}"
         )
-        return None
 
     # Combine all requirements into single text body
     all_reqs = "\n".join(all_requirements.values())
