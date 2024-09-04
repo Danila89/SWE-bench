@@ -255,6 +255,7 @@ MAP_VERSION_TO_INSTALL_PYTEST["7.4"]["pip_packages"] = [
 MAP_VERSION_TO_INSTALL_PYTEST["8.0"]["pip_packages"] = [
     "iniconfig==2.0.0", "packaging==23.1", "pluggy==1.3.0",
     "exceptiongroup==1.1.3", "tomli==2.0.1"]
+MAP_VERSION_TO_INSTALL_PYTEST["6.3"]["pre_install"] = ["sed -i 's/setuptools>=>=42.0/setuptools>=42.0/' setup.cfg"]
 
 MAP_VERSION_TO_INSTALL_MATPLOTLIB = {
     k: {
